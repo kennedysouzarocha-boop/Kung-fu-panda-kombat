@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Kung Fu Panda Kombat</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#111;color:#fff;font-family:Arial;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:5px}
+h1{color:#ffb300;font-size:20px;margin:8px;text-align:center}
+canvas{border:3px solid #ffb300;border-radius:10px;background:#3d2a0a;width:98vw;max-width:800px;height:400px;touch-action:none}
+.controls{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px;width:98vw;max-width:500px}
+.controls button{padding:15px 5px;background:#222;border:2px solid #ffb300;border-radius:8px;color:#fff;font-weight:bold}
+.controls .big{grid-column:span 2;background:#ffb300;color:#000}
+</style>
+</head>
+<body>
+<h1>🐼 KUNG FU PANDA KOMBAT 🐯</h1>
+<canvas id="g" width="800" height="400"></canvas>
+<div class="controls">
+<button ontouchstart="k['a']=1" ontouchend="k['a']=0">◀ A</button>
+<button ontouchstart="k['d']=1" ontouchend="k['d']=0">D ▶</button>
+<button ontouchstart="k['w']=1" ontouchend="k['w']=0">W PULAR</button>
+<button ontouchstart="k['j']=1" ontouchend="k['j']=0">J SOCO</button>
+<button ontouchstart="k['k']=1" ontouchend="k['k']=0">K ESPECIAL</button>
+</div>
+<div style="margin-top:5px;font-size:12px">No PC: A/D mover | W pular | J soco | K especial | L defesa</div>
+<script>
+const c=document.getElementById('g'),x=c.getContext('2d');let k={};onkeydown=e=>k[e.key.toLowerCase()]=1;onkeyup=e=>k[e.key.toLowerCase()]=0;
+let P={x:100,y:280,w:60,h:80,hp:100,vx:0,vy:0,g:1,f:1,a:0,t:''},E={x:600,y:280,w:60,h:80,hp:100,vx:0,vy:0,g:1,f:-1,a:0,cd:0};
+function upd(){
+P.vx=0;if(k['a']){P.vx=-5;P.f=-1}if(k['d']){P.vx=5;P.f=1}if(k['w']&&P.g){P.vy=-14;P.g=0}if(k['j']&&!P.a){P.a=18;P.t='p'}if(k['k']&&!P.a){P.a=28;P.t='s'}if(k['l']&&!P.a){P.a=20;P.t='d'}
+for(let u of [P,E]){u.x+=u.vx;u.vy+=0.8;u.y+=u.vy;if(u.y>=280){u.y=280;u.vy=0;u.g=1}u.x=Math.max(0,Math.min(740,u.x));if(u.a)u.a--;}
+let d=E.x-P.x;E.vx=0;if(Math.abs(d)>110&&E.cd<=0){E.vx=d>0?2.8:-2.8;E.f=d>0?1:-1}if(Math.abs(d)<95&&!E.a&&E.cd<=0&&Math.random()<0.07){E.a=20;E.cd=60}
+if(E.cd>0)E.cd--;function hit(A,B){if(A.a==10){let r=A.t=='s'?120:75,hx=A.f==1?A.x+A.w:A.x-r;if(B.x<hx+r&&B.x+B.w>hx&&Math.abs(B.y-A.y)<80&&A.t!='d'){B.hp-=A.t=='s'?18:9;B.hp=Math.max(0,B.hp);B.vx=A.f*7;B.vy=-6;if(B.hp<=0)setTimeout(()=>alert(B==E?'PO VENCEU! SKADOOSH! 🐼':'TAI LUNG VENCEU!'),100)}}}
+hit(P,E);hit(E,P);
+}
+function dr(p,po){x.save();x.translate(p.x+30,p.y+40);if(p.f==-1)x.scale(-1,1);x.fillStyle='rgba(0,0,0,.35)';x.fillRect(-25,50,50,8);x.fillStyle=po?'#f5e6c8':'#6b6b6b';x.fillRect(-18,-15,36,50);x.fillStyle=po?'#ffb300':'#222';x.fillRect(-20,35,40,8);x.fillStyle=po?'#fff':'#333';x.beginPath();x.arc(0,-22,18,0,7);x.fill();x.fillStyle='#000';x.fillRect(-6,-22,3,3);x.fillRect(3,-22,3,3);
+if(p.a){let col=p.t=='d'?'#00ccff':p.t=='s'?'#ffea00':'#ffb300';x.fillStyle=col;x.beginPath();if(p.t=='s'){x.arc(38,0,16,0,7)}else{x.arc(32,5,10,0,7)}x.fill();}x.restore();
+x.fillStyle=po?'#ffb300':'#ff3333';x.fillRect(po?20:500,15,p.hp*1.2,16);x.strokeStyle='#fff';x.strokeRect(po?20:500,15,120,16);
+x.fillStyle='#fff';x.font='12px Arial';x.fillText(po?'PO':'TAI LUNG',po?20:500,12)
+}
+function loop(){upd();x.fillStyle='#8B5A2B';x.fillRect(0,0,800,400);x.fillStyle='#3d2a0a';x.fillRect(0,360,800,40);x.fillStyle='#FFD700';x.font='bold 16px Arial';x.fillText('PALÁCIO DE JADE - KUNG FU PANDA',220,30);dr(P,1);dr(E,0);requestAnimationFrame(loop)}loop();
+</script>
+</body>
+</html>
