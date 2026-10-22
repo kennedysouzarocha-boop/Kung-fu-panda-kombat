@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>CHUVA DE BOLINHOS ULTRA</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:Arial;overflow:hidden;height:100dvh;display:flex;flex-direction:column}
+#top{height:56px;background:linear-gradient(90deg,#ff8800,#ffcc00);display:flex;justify-content:space-between;align-items:center;padding:0 14px;color:#000;font-weight:900;flex-shrink:0}
+#top span{font-family:'Bangers';font-size:22px;letter-spacing:1px}
+#score{font-size:20px}#best{font-size:12px;opacity:.7}
+#game{flex:1;position:relative;background:linear-gradient(180deg,#87CEEB 0%,#FFE4B5 60%,#FFCC88 100%);overflow:hidden}
+#po{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:68px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5));z-index:10;transition:left .08s linear}
+.food{position:absolute;font-size:34px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.4));z-index:5}
+#fx{position:absolute;top:30%;left:0;right:0;text-align:center;font-family:'Bangers';font-size:46px;color:#ff0000;text-shadow:3px 3px 0 #fff,0 0 20px #ffcc00;z-index:20;pointer-events:none}
+#ctrl{height:84px;background:#111;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:10px;flex-shrink:0;border-top:3px solid #ffcc00}
+#ctrl button{background:#222;border:2px solid #444;border-radius:14px;color:#fff;font-weight:900;font-size:22px}
+#ctrl button:active{transform:scale(.92);background:#ffcc00;color:#000}
+#over{position:absolute;inset:0;background:rgba(0,0,0,.85);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:30;text-align:center;padding:20px}
+#over h1{font-family:'Bangers';font-size:48px;color:#ffcc00}
+#over button{margin-top:16px;background:#ffcc00;color:#000;border:0;padding:14px 40px;border-radius:30px;font-weight:900;font-size:20px}
+</style>
+</head>
+<body>
+<div id="top"><span>🥟 CHUVA DE BOLINHOS</span><div><div id="score">0</div><div id="best">RECORDE: 0</div></div></div>
+<div id="game">
+<div id="po">🐼</div>
+<div id="fx"></div>
+<div id="over"><h1 id="over-title">FIM!</h1><p id="over-msg"></p><button onclick="reset()">JOGAR DE NOVO</button></div>
+</div>
+<div id="ctrl">
+<button ontouchstart="move(-1)" ontouchend="stop()" onmousedown="move(-1)" onmouseup="stop()">◀</button>
+<button ontouchstart="move(0)" onmousedown="move(0)">●</button>
+<button ontouchstart="move(1)" ontouchend="stop()" onmousedown="move(1)" onmouseup="stop()">▶</button>
+</div>
+<script>
+let score=0,best=localStorage.getItem('bolinhosBest')||0,x=50,vx=0,foods=[],on=true,speed=1.2,spawn=800;
+let game=document.getElementById('game'),po=document.getElementById('po'),scoreEl=document.getElementById('score'),bestEl=document.getElementById('best'),fx=document.getElementById('fx'),over=document.getElementById('over');
+bestEl.innerText='RECORDE: '+best;
+let types=[{e:'🥟',pts:10,good:true},{e:'🥟',pts:10,good:true},{e:'🥟',pts:10,good:true},{e:'🍑',pts:25,good:true},{e:'🍜',pts:20,good:true},{e:'🌶️',pts:-30,good:false},{e:'💣',pts:-50,good:false}];
+
+function fxShow(t){fx.innerText=t;fx.style.transform='scale(1.3)';setTimeout(()=>{fx.innerText='';fx.style.transform='scale(1)'},500);}
+
+function spawnFood(){
+if(!on)return;
+let tp=types[Math.floor(Math.random()*types.length)];
+let div=document.createElement('div');
+div.className='food';div.innerText=tp.e;
+div.style.left=Math.random()*85+'%';
+div.style.top='-50px';
+div.dataset.good=tp.good;
+div.dataset.pts=tp.pts;
+game.appendChild(div);
+foods.push({el:div,y:-50,x:parseFloat(div.style.left),type:tp});
+setTimeout(spawnFood,Math.max(220,spawn-score*4));
+}
+
+function move(d){
+if(d===0){vx=0;return;}
+vx=d*6;
+}
+function stop(){vx=0;}
+
+function update(){
+if(!on)return;
+x+=vx;
+if(x<8)x=8;if(x>92)x=92;
+po.style.left=x+'%';
+
+foods.forEach((f,i)=>{
+f.y+=speed+score*0.03;
+f.el.style.top=f.y+'px';
+let dx=Math.abs(f.x-x);
+if(f.y>window.innerHeight*0.72 && dx<12){
+if(f.type.good){
+score+=parseInt(f.el.dataset.pts);
+scoreEl.innerText=score;
+fxShow('+'+f.el.dataset.pts);
+if(navigator.vibrate)navigator.vibrate(20);
+if(score%100==0){speed+=0.2;fxShow('MAIS RÁPIDO!');}
+}else{
+score+=parseInt(f.el.dataset.pts);
+if(score<0)score=0;
+scoreEl.innerText=score;
+fxShow(f.el.innerText=='🌶️'?'AI PICANTE!':'BOOM!');
+if(navigator.vibrate)navigator.vibrate([50,30,50]);
+if(f.el.innerText=='💣'){gameOver();}
+}
+f.el.remove();
+foods.splice(i,
