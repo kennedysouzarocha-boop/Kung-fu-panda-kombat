@@ -3,27 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>KUNG FU PANDA KOMBAT V10 PRO</title>
+<title>KUNG FU NO AR - FIX</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;color:#fff;font-family:Arial;overflow:hidden}
-#menu{height:100vh;background:linear-gradient(rgba(0,0,0,.4),rgba(0,0,0,.8)),url('https://images.unsplash.com/photo-1599707367072-cd6ada2bc4b7?w=800') center/cover;display:flex;flex-direction:column;align-items:center;justify-content:center}
-h1{font-family:'Bangers';font-size:38px;color:#ffcc00;text-shadow:0 0 20px #ff8800,4px 4px 0 #000;letter-spacing:3px;text-align:center}
-h1 span{color:#fff}
-.sub{font-size:12px;letter-spacing:4px;opacity:.8;margin:6px 0 16px;background:rgba(0,0,0,.6);padding:4px 12px;border-radius:20px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:380px;padding:10px}
-.card{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(0,0,0,.8));border:2px solid rgba(255,204,0,.3);border-radius:14px;padding:8px;text-align:center;backdrop-filter:blur(6px)}
-.card.on{border-color:#ffcc00;box-shadow:0 0 25px #ffcc00, inset 0 0 15px rgba(255,204,0,.3);transform:scale(1.05);background:linear-gradient(180deg,rgba(255,204,0,.3),rgba(0,0,0,.9))}
-.card .pic{font-size:48px;filter:drop-shadow(0 4px 6px #000)}
-.card .name{font-weight:900;font-size:11px;margin-top:4px;text-shadow:1px 1px 0 #000}
-.card.on .name{color:#ffcc00}
-#go{background:linear-gradient(180deg,#ffe55a,#ff8800);color:#000;border:none;padding:16px 60px;border-radius:35px;font-family:'Bangers';font-size:28px;letter-spacing:2px;box-shadow:0 5px 0 #aa4400,0 0 30px #ffcc00;margin-top:12px}
-#go:active{transform:translateY(4px);box-shadow:0 1px 0 #aa4400}
-#game{display:none;height:100vh;flex-direction:column;background:url('https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800') center/cover}
-#hud{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:linear-gradient(rgba(0,0,0,.9),rgba(0,0,0,.6));border-bottom:3px solid #ffcc00}
-.player-hud{display:flex;align-items:center;gap:8px;width:42%}
-.player-hud.right{flex-direction:row-reverse}
-.avatar{width:48px;height:48px;border-radius:8px;border:2px solid #ffcc00;background:#222;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 10px #000}
-.info{flex:1}
-.n{font-size:11px;font-weight:900;color
+html,body{height:100%;overflow:hidden}
+body{background:#000;display:flex;flex-direction:column;height:100dvh}
+#top{height:40px;display:flex;align-items:center;gap:8px;padding:6px;background:#1a1a2e;border-bottom:3px solid #ffcc00;flex-shrink:0}
+.bar{flex:1;height:18px;background:#333;border:2px solid #fff;border-radius:9px;overflow:hidden}
+.fill{height:100%;width:100%;background:linear-gradient(90deg,#ff0000,#ffff00)}
+#mid{color:#ffcc00;font-weight:900;font-size:14px;white-space:nowrap}
+#arena{flex:1;position:relative;background:linear-gradient(180deg,#4facfe 0%,#43e97b 60%,#f8b500 100%);overflow:hidden}
+.cloud{position:absolute;background:#fff;border-radius:50%;opacity:.85}
+#floor{position:absolute;bottom:0;left:0;width:100%;height:16px;background:#ff7b00;border-top:3px solid #000}
+.fighter{position:absolute;bottom:16px;font-size:64px;line-height:1;filter:drop-shadow(0 5px 8px rgba(0,0,0,.8))}
+#p1{left:15%;z-index:5}
+#p2{right:15%;z-index:5;transform:scaleX(-1)}
+#fx{position:absolute;top:18%;left:0;right:0;text-align:center;font-size:36px;font-weight:900;color:#fff;text-shadow:3px 3px 0 #000,0 0 20px #ff0000;z-index:20}
+#ctrl{height:86px;flex-shrink:0;display:grid;grid-template-columns:60px 60px 1fr 75px 75px;gap:6px;padding:8px;background:#000;border-top:2px solid #333}
+#ctrl button{border:2px solid #555;border-radius:12px;background:#222;color:#fff;font-weight:900;font-size:14px}
+#ctrl button:active{transform:scale(.92)}
+#jump{background:#00ff88!important;color:#000!important;border-color:#00ff88!important}
+#punch{background:#ff2222!important}
+#kick{background:#2255ff!important}
+</style>
+</head>
+<body>
+<div id="top"><div class="bar"><div id="hp1" class="fill"></div></div><div id="mid">NO AR</div><div class="bar"><div id="hp2" class="fill"></div></div></div>
+<div id="arena">
+<div class="cloud" style="width:85px;height:38px;top:15%;left:10%"></div>
+<div class="cloud" style="width:110px;height:46px;top:10%;right:12%"></div>
+<div class="cloud" style="width:68px;height:30px;top:38%;left:48%"></div>
+<div id="floor"></div>
+<div id="fx">FIGHT!</div>
+<div id="p1" class="fighter">🐼</div>
+<div id="p2" class="fighter">🐯</div>
+</div>
+<div id="ctrl">
+<button onclick="mv(-1)">◀</button>
+<button onclick="mv(1)">▶</button>
+<button id="jump" onclick="jump()">PULO</button>
+<button id="punch" onclick="hit(1)">SOCO</button>
+<button id="kick" onclick="hit(2)">CHUTE</button>
+</div>
+<script>
+let h1=100,h2=100,x1=15,x2=15,y1=0,y2=0,vy1=0,vy2=0,on=true;
+let e1=document.getElementById('p1'),e2=document.getElementById('p2');
+let hp1=document.getElementById('hp1'),hp2=document.getElementById('hp2'),fxe=document.getElementById('fx');
+function upd(){hp1.style.width=h1+'%';hp2.style.width=h2+'%';}
+function fx(t){fxe.innerText=t;setTimeout(()=>fxe.innerText='',700);}
+function mv(d){x1+=d*7;if(x1<2)x1=2;if(x1>70)x1=70;e1.style.left=x1+'%';}
+function jump(){if(y1<6){vy1=16;fx('POW!');}}
+function hit(t){
+let dx=Math.abs(x1-(85-x2)),dy=Math.abs(y1-y2);
+if(dx<30&&dy<50){let dmg=t==1?15:24;h2-=dmg;upd();fx(t==1?'SOCO AÉREO!':'CHUTÃO!');e1.style.transform='scale(1.3)';setTimeout(()=>e1.style.transform='scale(1)',120);if(h2<=0){fx('VITORIA!');on=false;setTimeout(()=>location.reload(),1500);}}
+else fx('CHEGA PERTO!');
+}
+(function phys(){
+if(!on)return;
+vy1-=0.75;y1+=vy1;if(y1<0){y1=0;vy1=0;}
+vy2-=0.75;y2+=vy2;if(y2<0){y2=0;vy2=0;}
+e1.style.bottom=(16+y1*7)+'px';
+e2.style.bottom=(16+y2*7)+'px';
+requestAnimationFrame(phys);
+})();
+(function cpu(){
+if(!on)return;
+let dx=Math.abs(x1-(85-x2));
+if(y2<5&&Math.random()<0.05)vy2=14;
+if(dx>30){if(x1<(85-x2))x2-=1.2;else x2+=1.2;if(x2<2)x2=2;if(x2>70)x2=70;e2.style.right=x2+'%';}
+else if(Math.random()<0.06){h1-=12;upd();fx('AI!');if(h1<=0){fx('DERROTA!');on=false;setTimeout(()=>location.reload(),1500);}}
+setTimeout(cpu,130);
+})();
+fx('FIGHT!');
+</script>
+</body>
+</html>
