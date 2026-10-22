@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>CHUVA DE BOLINHOS V2</title>
+<title>CHUVA DE BOLINHOS V3 FIX</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;overflow:hidden;height:100dvh;display:flex;flex-direction:column}
 #top{height:56px;background:linear-gradient(90deg,#ff8800,#ffcc00);display:flex;justify-content:space-between;align-items:center;padding:0 14px;font-weight:900;flex-shrink:0}
-#game{flex:1;position:relative;background:linear-gradient(180deg,#87CEEB,#FFE4B5 60%,#FFCC88 100%);overflow:hidden;touch-action:none}
+#game{flex:1;position:relative;background:linear-gradient(180deg,#87CEEB 0%,#FFE4B5 30%,#FFCC88 100%);overflow:hidden;touch-action:none}
 #po{position:absolute;bottom:14px;left:50%;font-size:68px;transform:translateX(-50%);filter:drop-shadow(0 6px 10px rgba(0,0,0,.5));z-index:10}
-.food{position:absolute;font-size:34px;z-index:5}
+.food{position:absolute;font-size:36px;z-index:5;will-change:top}
 #scorebox{font-size:20px;text-align:right;line-height:1.1}
-#fx{position:absolute;top:30%;left:0;right:0;text-align:center;font-size:40px;font-weight:900;color:#ff0000;text-shadow:3px 3px 0 #fff;z-index:20;pointer-events:none}
+#fx{position:absolute;top:40%;left:0;right:0;text-align:center;font-size:42px;font-weight:900;color:#ff0000;text-shadow:3px 3px 0 #fff;z-index:20;pointer-events:none}
 #ctrl{height:92px;background:#111;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:10px;flex-shrink:0;border-top:3px solid #ffcc00}
-#ctrl button{background:#222;border:2px solid #555;border-radius:16px;color:#fff;font-weight:900;font-size:28px;user-select:none;-webkit-user-select:none}
+#ctrl button{background:#222;border:2px solid #555;border-radius:16px;color:#fff;font-weight:900;font-size:28px}
 #ctrl button:active{background:#ffcc00;color:#000}
 #over{position:absolute;inset:0;background:rgba(0,0,0,.88);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:30;color:#fff;text-align:center}
 #over button{margin-top:16px;background:#ffcc00;color:#000;border:0;padding:14px 40px;border-radius:30px;font-weight:900;font-size:20px}
@@ -25,25 +25,46 @@ body{background:#000;overflow:hidden;height:100dvh;display:flex;flex-direction:c
 <div id="game"><div id="po">🐼</div><div id="fx"></div><div id="over"><h1 id="ot">FIM!</h1><p id="om"></p><button onclick="resetGame()">JOGAR DE NOVO</button></div></div>
 <div id="ctrl"><button id="bl">◀</button><button id="bc">●</button><button id="br">▶</button></div>
 <script>
-let score=0,best=localStorage.getItem('bolinhosBest')||0,x=50,vx=0,foods=[],on=true,speed=2.5;
+let score=0,best=localStorage.getItem('bolinhosBest')||0,x=50,vx=0,foods=[],on=true,speed=3;
 let game=document.getElementById('game'),po=document.getElementById('po'),scoreEl=document.getElementById('score'),bestEl=document.getElementById('best'),fx=document.getElementById('fx'),over=document.getElementById('over');
 bestEl.innerText=best;
-let types=[{e:'🥟',pts:10,good:1},{e:'🥟',pts:10,good:1},{e:'🍑',pts:25,good:1},{e:'🍜',pts:20,good:1},{e:'🌶️',pts:0,good:0},{e:'💣',pts:0,good:0}];
+let types=[{e:'🥟',pts:10},{e:'🥟',pts:10},{e:'🍑',pts:25},{e:'🍜',pts:20},{e:'🌶️',bad:true},{e:'💣',bad:true}];
 function fxShow(t){fx.innerText=t;setTimeout(()=>fx.innerText='',600);}
-function spawnFood(){if(!on)return;let tp=types[Math.floor(Math.random()*types.length)];let d=document.createElement('div');d.className='food';d.innerText=tp.e;d.style.left=(Math.random()*80+5)+'%';d.style.top='-50px';d.dataset.good=tp.good;game.appendChild(d);foods.push({el:d,y:-50,x:parseFloat(d.style.left),tp:tp});setTimeout(spawnFood,700);}
-function update(){if(!on)return;x+=vx;if(x<6)x=6;if(x>94)x=94;po.style.left=x+'%';foods.forEach((f,i)=>{f.y+=speed;f.el.style.top=f.y+'px';if(f.y>68&&Math.abs(f.x-x)<10){if(f.tp.good){score+=f.tp.pts;scoreEl.innerText=score;fxShow('+'+f.tp.pts);if(navigator.vibrate)navigator.vibrate(20);}else{if(f.tp.e=='💣'){gameOver();return;}else{score=Math.max(0,score-15);scoreEl.innerText=score;fxShow('PICANTE! -15');if(navigator.vibrate)navigator.vibrate(80);}}f.el.remove();foods.splice(i,1);}if(f.y>95){f.el.remove();foods.splice(i,1);}});requestAnimationFrame(update);}
-function gameOver(){on=false;if(score>best){best=score;localStorage.setItem('bolinhosBest',best);bestEl.innerText=best;}document.getElementById('ot').innerText=score>=best?'NOVO RECORDE!':'FIM!';document.getElementById('om').innerText='Você fez '+score+' pontos!';over.style.display='flex';}
-function resetGame(){score=0;scoreEl.innerText=0;foods.forEach(f=>f.el.remove());foods=[];x=50;on=true;over.style.display='none';spawnFood();update();}
-// CONTROLES NOVOS QUE FUNCIONAM
+function spawnFood(){if(!on)return;let tp=types[Math.floor(Math.random()*types.length)];let d=document.createElement('div');d.className='food';d.innerText=tp.e;d.style.left=(Math.random()*84+3)+'%';d.style.top='-60px';d.dataset.bad=tp.bad?'1':'0';game.appendChild(d);foods.push({el:d,y:-60,x:parseFloat(d.style.left),tp:tp});setTimeout(spawnFood,650);}
+// LOOP PRINCIPAL CORRIGIDO - CAI ATÉ O CHÃO
+function update(){
+if(!on){requestAnimationFrame(update);return;}
+x+=vx;if(x<6)x=6;if(x>94)x=94;po.style.left=x+'%';
+let gh=game.clientHeight;
+for(let i=foods.length-1;i>=0;i--){
+let f=foods[i];
+f.y+=speed;
+f.el.style.top=f.y+'px';
+// só coleta quando tá quase no Po (perto do chão)
+let nearBottom = f.y > gh - 120;
+if(nearBottom){
+let dx=Math.abs(f.x - x);
+if(dx < 13){
+if(f.tp.bad){
+if(f.tp.e=='💣'){gameOver();return;}
+else{score=Math.max(0,score-15);scoreEl.innerText=score;fxShow('PICANTE! -15');}
+}else{score+=f.tp.pts;scoreEl.innerText=score;fxShow('+'+f.tp.pts);}
+f.el.remove();foods.splice(i,1);continue;
+}
+}
+// só some se sair da tela lá embaixo
+if(f.y > gh + 60){f.el.remove();foods.splice(i,1);}
+}
+requestAnimationFrame(update);
+}
+function gameOver(){on=false;if(score>best){best=score;localStorage.setItem('bolinhosBest',best);bestEl.innerText=best;}document.getElementById('ot').innerText=score>=best&&score>0?'NOVO RECORDE!':'FIM!';document.getElementById('om').innerText='Você fez '+score+' pontos!';over.style.display='flex';}
+function resetGame(){score=0;scoreEl.innerText=0;foods.forEach(f=>f.el.remove());foods=[];x=50;on=true;over.style.display='none';}
 function setVx(v){vx=v;}
-let bl=document.getElementById('bl'),br=document.getElementById('br'),bc=document.getElementById('bc');
-function bind(btn,val){btn.addEventListener('touchstart',e=>{e.preventDefault();setVx(val);});btn.addEventListener('touchend',e=>{e.preventDefault();setVx(0);});btn.addEventListener('mousedown',()=>setVx(val));btn.addEventListener('mouseup',()=>setVx(0));btn.addEventListener('mouseleave',()=>setVx(0));}
-bind(bl,-3.5);bind(br,3.5);
-bc.addEventListener('touchstart',e=>{e.preventDefault();setVx(0);});
-bc.addEventListener('mousedown',()=>setVx(0));
-// arrastar o Po com dedo
-game.addEventListener('touchmove',e=>{let r=game.getBoundingClientRect();let tx=e.touches[0].clientX-r.left;x=(tx/r.width)*100;if(x<6)x=6;if(x>94)x=94;po.style.left=x+'%';e.preventDefault();},{passive:false});
-game.addEventListener('touchstart',e=>{let r=game.getBoundingClientRect();let tx=e.touches[0].clientX-r.left;x=(tx/r.width)*100;po.style.left=x+'%';});
+let bl=document.getElementById('bl'),br=document.getElementById('br');
+bl.addEventListener('touchstart',e=>{e.preventDefault();setVx(-4);});bl.addEventListener('touchend',e=>{e.preventDefault();setVx(0);});bl.addEventListener('mousedown',()=>setVx(-4));bl.addEventListener('mouseup',()=>setVx(0));bl.addEventListener('mouseleave',()=>setVx(0));
+br.addEventListener('touchstart',e=>{e.preventDefault();setVx(4);});br.addEventListener('touchend',e=>{e.preventDefault();setVx(0);});br.addEventListener('mousedown',()=>setVx(4));br.addEventListener('mouseup',()=>setVx(0));br.addEventListener('mouseleave',()=>setVx(0));
+game.addEventListener('touchmove',e=>{let r=game.getBoundingClientRect();let tx=e.touches[0].clientX-r.left;x=(tx/r.width)*100;if(x<6)x=6;if(x>94)x=94;e.preventDefault();},{passive:false});
+game.addEventListener('touchstart',e=>{let r=game.getBoundingClientRect();let tx=e.touches[0].clientX-r.left;x=(tx/r.width)*100;});
 spawnFood();update();
 </script>
 </body>
