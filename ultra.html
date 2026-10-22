@@ -3,97 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>KUNG FU NO AR - ULTRA 3.0</title>
+<title>KUNG FU PANDA KOMBAT V10 PRO</title>
 <style>
-body{margin:0;background:#000;color:#fff;font-family:Arial;text-align:center;overflow:hidden}
-h1{font-size:22px;color:#ffcc00;margin:8px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px;max-width:360px;margin:0 auto}
-.c{background:#1a2340;border:3px solid #334477;border-radius:12px;padding:10px 2px}
-.c.on{border-color:#ffcc00;background:#332a00;box-shadow:0 0 12px #ffcc00}
-.c b{font-size:36px;display:block}
-#go{background:#ffcc00;color:#000;border:0;padding:12px 40px;border-radius:25px;font-size:20px;font-weight:bold;margin:10px}
-#game{display:none;height:100vh;flex-direction:column;background:linear-gradient(#4facfe 0%, #00f2fe 40%, #ffcc00 100%)}
-#top{display:flex;justify-content:space-between;padding:6px;background:rgba(0,0,0,.7)}
-.bar{width:40%;height:18px;background:#333;border-radius:10px;overflow:hidden;border:1px solid #fff}
-.fill{height:100%;width:100%;background:linear-gradient(90deg,#ff0000,#ffff00);transition:.2s}
-#arena{flex:1;position:relative;overflow:hidden}
-.cloud{position:absolute;background:#fff;border-radius:50%;opacity:.7}
-#floor{position:absolute;bottom:0;width:100%;height:20px;background:linear-gradient(#ff8800,#aa4400)}
-#p1,#p2{position:absolute;font-size:60px;transition:transform .1s}
-#p1{left:15%}#p2{right:15%}
-#fx{position:absolute;top:25%;width:100%;text-align:center;font-size:30px;font-weight:900;color:#ff0000;text-shadow:2px 2px 0 #fff,0 0 10px #ffcc00}
-#ctrl{display:grid;grid-template-columns:70px 70px 60px 70px 70px;gap:6px;padding:8px;background:#000;height:85px}
-#ctrl button{background:#222;color:#fff;border:2px solid #555;border-radius:10px;font-weight:bold;font-size:14px}
-#ctrl button:active{background:#ffcc00;color:#000}
-#btn-jump{background:#00ff88!important;border-color:#00ffaa!important;color:#000!important}
-</style>
-</head>
-<body>
-<div id="m">
-<h1>🐼 KUNG FU NO AR - ULTRA 3.0</h1>
-<p style="font-size:11px;opacity:.7">LUTA NO CÉU! PULA E BATE!</p>
-<div class="grid">
-<div class="c on" onclick="s='po';sel(this)"><b>🐼</b>PO</div>
-<div class="c" onclick="s='tig';sel(this)"><b>🐯</b>TIGRESA</div>
-<div class="c" onclick="s='shi';sel(this)"><b>🦝</b>SHIFU</div>
-<div class="c" onclick="s='tai';sel(this)"><b>🐆</b>TAI LUNG</div>
-<div class="c" onclick="s='shen';sel(this)"><b>🦚</b>SHEN</div>
-<div class="c" onclick="s='kai';sel(this)"><b>🐂</b>KAI</div>
-<div class="c" onclick="s='mac';sel(this)"><b>🐒</b>MACACO</div>
-<div class="c" onclick="s='vib';sel(this)"><b>🐍</b>VIBORA</div>
-<div class="c" onclick="s='man';sel(this)"><b>🦗</b>MANTIS</div>
-</div>
-<button id="go" onclick="go()">🚀 LUTAR NO AR! 🚀</button>
-</div>
-
-<div id="game">
-<div id="top"><div class="bar"><div id="hp1" class="fill"></div></div><div style="font-weight:bold;color:#ffcc00">NO AR</div><div class="bar"><div id="hp2" class="fill"></div></div></div>
-<div id="arena">
-<div class="cloud" style="width:80px;height:40px;top:20%;left:10%"></div>
-<div class="cloud" style="width:100px;height:50px;top:15%;left:60%"></div>
-<div class="cloud" style="width:60px;height:30px;top:35%;left:40%"></div>
-<div id="floor"></div><div id="fx"></div><div id="p1">🐼</div><div id="p2">🐯</div>
-</div>
-<div id="ctrl"><button onclick="mv(-1)">◀</button><button onclick="mv(1)">▶</button><button id="btn-jump" onclick="jump()">PULO</button><button onclick="hit(1)">SOCO</button><button onclick="hit(2)">CHUTE</button></div>
-</div>
-
-<script>
-var s='po',h1=100,h2=100,x1=15,x2=15,y1=0,y2=0,vy1=0,vy2=0,on=false,grav=0.7;
-function sel(e){document.querySelectorAll('.c').forEach(a=>a.classList.remove('on'));e.classList.add('on');}
-function go(){
-document.getElementById('m').style.display='none';document.getElementById('game').style.display='flex';
-var m={po:'🐼',tig:'🐯',shi:'🦝',tai:'🐆',shen:'🦚',kai:'🐂',mac:'🐒',vib:'🐍',man:'🦗'};
-document.getElementById('p1').innerText=m[s];
-var ks=Object.keys(m);var r=ks[Math.floor(Math.random()*ks.length)];document.getElementById('p2').innerText=m[r];
-on=true;loop();phys();cpu();
-}
-function mv(d){if(!on)return;x1+=d*6;if(x1<2)x1=2;if(x1>70)x1=70;document.getElementById('p1').style.left=x1+'%';}
-function jump(){if(!on)return;if(y1<10){vy1=14;fx('POW!');}}
-function hit(t){
-if(!on)return;var dx=Math.abs(x1-(80-x2));var dy=Math.abs(y1-y2);
-if(dx<28&&dy<40){var dmg=t==1?14:22;h2-=dmg;document.getElementById('hp2').style.width=h2+'%';fx(t==1?'SOCO AÉREO!':'CHUTE Voador!');if(navigator.vibrate)navigator.vibrate(50);if(h2<=0){fx('VITORIA NO AR!');on=false;setTimeout(()=>location.reload(),1800);}}
-else fx('CHEGA PERTO!');
-}
-function fx(t){var e=document.getElementById('fx');e.innerText=t;setTimeout(()=>e.innerText='',600);}
-function phys(){
-if(!on)return;
-vy1-=grav;y1+=vy1;if(y1<0){y1=0;vy1=0;}
-vy2-=grav;y2+=vy2;if(y2<0){y2=0;vy2=0;}
-document.getElementById('p1').style.bottom=(20+y1*6)+'px';
-document.getElementById('p2').style.bottom=(20+y2*6)+'px';
-if(y1>5)document.getElementById('p1').style.transform='rotate('+(vy1*2)+'deg)';
-else document.getElementById('p1').style.transform='rotate(0deg)';
-requestAnimationFrame(phys);
-}
-function loop(){}
-function cpu(){
-if(!on)return;
-var dx=Math.abs(x1-(80-x2));
-if(y2<10&&Math.random()<0.04)vy2=12;
-if(dx>25){if(x1<(80-x2))x2-=1.2;else x2+=1.2;document.getElementById('p2').style.right=x2+'%';}
-else if(Math.random()<0.06){h1-=12;document.getElementById('hp1').style.width=h1+'%';fx('AI AÉREO!');if(h1<=0){fx('DERROTA!');on=false;setTimeout(()=>location.reload(),1800);}}
-setTimeout(cpu,120);
-}
-</script>
-</body>
-</html>
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:Arial;overflow:hidden}
+#menu{height:100vh;background:linear-gradient(rgba(0,0,0,.4),rgba(0,0,0,.8)),url('https://images.unsplash.com/photo-1599707367072-cd6ada2bc4b7?w=800') center/cover;display:flex;flex-direction:column;align-items:center;justify-content:center}
+h1{font-family:'Bangers';font-size:38px;color:#ffcc00;text-shadow:0 0 20px #ff8800,4px 4px 0 #000;letter-spacing:3px;text-align:center}
+h1 span{color:#fff}
+.sub{font-size:12px;letter-spacing:4px;opacity:.8;margin:6px 0 16px;background:rgba(0,0,0,.6);padding:4px 12px;border-radius:20px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:380px;padding:10px}
+.card{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(0,0,0,.8));border:2px solid rgba(255,204,0,.3);border-radius:14px;padding:8px;text-align:center;backdrop-filter:blur(6px)}
+.card.on{border-color:#ffcc00;box-shadow:0 0 25px #ffcc00, inset 0 0 15px rgba(255,204,0,.3);transform:scale(1.05);background:linear-gradient(180deg,rgba(255,204,0,.3),rgba(0,0,0,.9))}
+.card .pic{font-size:48px;filter:drop-shadow(0 4px 6px #000)}
+.card .name{font-weight:900;font-size:11px;margin-top:4px;text-shadow:1px 1px 0 #000}
+.card.on .name{color:#ffcc00}
+#go{background:linear-gradient(180deg,#ffe55a,#ff8800);color:#000;border:none;padding:16px 60px;border-radius:35px;font-family:'Bangers';font-size:28px;letter-spacing:2px;box-shadow:0 5px 0 #aa4400,0 0 30px #ffcc00;margin-top:12px}
+#go:active{transform:translateY(4px);box-shadow:0 1px 0 #aa4400}
+#game{display:none;height:100vh;flex-direction:column;background:url('https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800') center/cover}
+#hud{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:linear-gradient(rgba(0,0,0,.9),rgba(0,0,0,.6));border-bottom:3px solid #ffcc00}
+.player-hud{display:flex;align-items:center;gap:8px;width:42%}
+.player-hud.right{flex-direction:row-reverse}
+.avatar{width:48px;height:48px;border-radius:8px;border:2px solid #ffcc00;background:#222;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 10px #000}
+.info{flex:1}
+.n{font-size:11px;font-weight:900;color
