@@ -2,45 +2,57 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Kung Fu Panda Kombat</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Kung Fu Panda Kombat - ULTIMATE</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#111;color:#fff;font-family:Arial;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:5px}
-h1{color:#ffb300;font-size:20px;margin:8px;text-align:center}
-canvas{border:3px solid #ffb300;border-radius:10px;background:#3d2a0a;width:98vw;max-width:800px;height:400px;touch-action:none}
-.controls{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px;width:98vw;max-width:500px}
-.controls button{padding:15px 5px;background:#222;border:2px solid #ffb300;border-radius:8px;color:#fff;font-weight:bold}
-.controls .big{grid-column:span 2;background:#ffb300;color:#000}
+*{margin:0;padding:0;box-sizing:border-box;user-select:none}
+body{background:#111;color:#fff;font-family:Arial;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{color:#ffcc00;font-size:20px;margin:8px;text-align:center;text-shadow:0 0 8px #ffcc00}
+#wrap{position:relative}
+canvas{border:3px solid #ffcc00;border-radius:10px;background:#2a5a2a;display:block;max-width:95vw}
+#hud{position:absolute;top:6px;left:8px;right:8px;display:flex;justify-content:space-between;pointer-events:none}
+.bar{width:38%;height:16px;background:#222;border:2px solid #000;border-radius:8px;overflow:hidden}
+.fill{height:100%;transition:width .2s}
+#hp1{background:linear-gradient(90deg,#0f0,#0a0)}#hp2{background:linear-gradient(90deg,#f00,#a00)}
+.name{font-size:11px;margin-bottom:2px}
+.controls{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;width:95vw;max-width:500px;margin-top:6px}
+.controls button{padding:13px 2px;background:#333;border:2px solid #555;border-radius:8px;color:#fff;font-weight:bold;font-size:12px}
+.controls button:active{background:#ffcc00;color:#000}
+.big{grid-column:span 2;background:linear-gradient(#ffcc00,#ff9900)!important;color:#000!important}
+.special{background:linear-gradient(#ff3300,#aa0000)!important;color:#fff!important;border-color:#ff5555!important}
+#msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:30px;font-weight:bold;display:none;text-align:center;text-shadow:2px 2px 5px #000}
 </style>
 </head>
 <body>
-<h1>🐼 KUNG FU PANDA KOMBAT 🐯</h1>
+<h1>🐼 KUNG FU PANDA KOMBAT 🐯 ULTIMATE</h1>
+<div id="wrap">
+<div id="hud"><div style="width:40%"><div class="name">PO <span id="t1">100</span>%</div><div class="bar"><div id="hp1" class="fill" style="width:100%"></div></div></div><div style="width:40%;text-align:right"><div class="name"><span id="t2">100</span>% TIGRESA</div><div class="bar" style="margin-left:auto"><div id="hp2" class="fill" style="width:100%"></div></div></div></div>
+<div id="msg"></div>
 <canvas id="g" width="800" height="400"></canvas>
-<div class="controls">
-<button ontouchstart="k['a']=1" ontouchend="k['a']=0">◀ A</button>
-<button ontouchstart="k['d']=1" ontouchend="k['d']=0">D ▶</button>
-<button ontouchstart="k['w']=1" ontouchend="k['w']=0">W PULAR</button>
-<button ontouchstart="k['j']=1" ontouchend="k['j']=0">J SOCO</button>
-<button ontouchstart="k['k']=1" ontouchend="k['k']=0">K ESPECIAL</button>
 </div>
-<div style="margin-top:5px;font-size:12px">No PC: A/D mover | W pular | J soco | K especial | L defesa</div>
+<div class="controls">
+<button ontouchstart="k['a']=1" ontouchend="k['a']=0" onmousedown="k['a']=1" onmouseup="k['a']=0">◀</button>
+<button ontouchstart="k['d']=1" ontouchend="k['d']=0" onmousedown="k['d']=1" onmouseup="k['d']=0">▶</button>
+<button ontouchstart="k['w']=1" ontouchend="k['w']=0" onmousedown="k['w']=1" onmouseup="k['w']=0">PULO</button>
+<button ontouchstart="k['j']=1" ontouchend="k['j']=0" onmousedown="k['j']=1" onmouseup="k['j']=0">J SOCO</button>
+<button ontouchstart="k['k']=1" ontouchend="k['k']=0" onmousedown="k['k']=1" onmouseup="k['k']=0">K CHUTE</button>
+<button class="big special" ontouchstart="k['l']=1" ontouchend="k['l']=0" onmousedown="k['l']=1" onmouseup="k['l']=0">L ESPECIAL 🔥</button>
+<button class="big" ontouchstart="k['r']=1" ontouchend="k['r']=0" onmousedown="k['r']=1" onmouseup="k['r']=0">R REINICIAR</button>
+</div>
 <script>
-const c=document.getElementById('g'),x=c.getContext('2d');let k={};onkeydown=e=>k[e.key.toLowerCase()]=1;onkeyup=e=>k[e.key.toLowerCase()]=0;
-let P={x:100,y:280,w:60,h:80,hp:100,vx:0,vy:0,g:1,f:1,a:0,t:''},E={x:600,y:280,w:60,h:80,hp:100,vx:0,vy:0,g:1,f:-1,a:0,cd:0};
-function upd(){
-P.vx=0;if(k['a']){P.vx=-5;P.f=-1}if(k['d']){P.vx=5;P.f=1}if(k['w']&&P.g){P.vy=-14;P.g=0}if(k['j']&&!P.a){P.a=18;P.t='p'}if(k['k']&&!P.a){P.a=28;P.t='s'}if(k['l']&&!P.a){P.a=20;P.t='d'}
-for(let u of [P,E]){u.x+=u.vx;u.vy+=0.8;u.y+=u.vy;if(u.y>=280){u.y=280;u.vy=0;u.g=1}u.x=Math.max(0,Math.min(740,u.x));if(u.a)u.a--;}
-let d=E.x-P.x;E.vx=0;if(Math.abs(d)>110&&E.cd<=0){E.vx=d>0?2.8:-2.8;E.f=d>0?1:-1}if(Math.abs(d)<95&&!E.a&&E.cd<=0&&Math.random()<0.07){E.a=20;E.cd=60}
-if(E.cd>0)E.cd--;function hit(A,B){if(A.a==10){let r=A.t=='s'?120:75,hx=A.f==1?A.x+A.w:A.x-r;if(B.x<hx+r&&B.x+B.w>hx&&Math.abs(B.y-A.y)<80&&A.t!='d'){B.hp-=A.t=='s'?18:9;B.hp=Math.max(0,B.hp);B.vx=A.f*7;B.vy=-6;if(B.hp<=0)setTimeout(()=>alert(B==E?'PO VENCEU! SKADOOSH! 🐼':'TAI LUNG VENCEU!'),100)}}}
-hit(P,E);hit(E,P);
-}
-function dr(p,po){x.save();x.translate(p.x+30,p.y+40);if(p.f==-1)x.scale(-1,1);x.fillStyle='rgba(0,0,0,.35)';x.fillRect(-25,50,50,8);x.fillStyle=po?'#f5e6c8':'#6b6b6b';x.fillRect(-18,-15,36,50);x.fillStyle=po?'#ffb300':'#222';x.fillRect(-20,35,40,8);x.fillStyle=po?'#fff':'#333';x.beginPath();x.arc(0,-22,18,0,7);x.fill();x.fillStyle='#000';x.fillRect(-6,-22,3,3);x.fillRect(3,-22,3,3);
-if(p.a){let col=p.t=='d'?'#00ccff':p.t=='s'?'#ffea00':'#ffb300';x.fillStyle=col;x.beginPath();if(p.t=='s'){x.arc(38,0,16,0,7)}else{x.arc(32,5,10,0,7)}x.fill();}x.restore();
-x.fillStyle=po?'#ffb300':'#ff3333';x.fillRect(po?20:500,15,p.hp*1.2,16);x.strokeStyle='#fff';x.strokeRect(po?20:500,15,120,16);
-x.fillStyle='#fff';x.font='12px Arial';x.fillText(po?'PO':'TAI LUNG',po?20:500,12)
-}
-function loop(){upd();x.fillStyle='#8B5A2B';x.fillRect(0,0,800,400);x.fillStyle='#3d2a0a';x.fillRect(0,360,800,40);x.fillStyle='#FFD700';x.font='bold 16px Arial';x.fillText('PALÁCIO DE JADE - KUNG FU PANDA',220,30);dr(P,1);dr(E,0);requestAnimationFrame(loop)}loop();
+const c=document.getElementById('g'),x=c.getContext('2d');
+let k={},parts=[],shake=0,stop=0,down={};
+function say(t,col="#ffcc00",time=1200){let m=document.getElementById('msg');m.style.display='block';m.innerHTML=t;m.style.color=col;setTimeout(()=>m.style.display='none',time)}
+let P={x:100,y:280,w:60,h:80,hp:100,vx:0,vy:0,g:1,f:1,a:0,at:0,cd:0,hit:0};
+let E={x:620,y:280,w:60,h:80,hp:100,vx:0,vy:0,g:1,f:-1,a:0,at:0,cd:0,hit:0,ai:0};
+function sp(xp,yp,co,n=8){for(let i=0;i<n;i++)parts.push({x:xp,y:yp,vx:(Math.random()-.5)*10,vy:(Math.random()-1)*8,co,life:20})}
+function rst(){P={x:100,y:280,w:60,h:80,hp:100,vx:0,vy:0,g:1,f:1,a:0,at:0,cd:0,hit:0};E={x:620,y:280,w:60,h:80,hp:100,vx:0,vy:0,g:1,f:-1,a:0,at:0,cd:0,hit:0,ai:0};parts=[];say("FIGHT!","#ffcc00",800);hp()}
+function hp(){document.getElementById('hp1').style.width=P.hp+'%';document.getElementById('hp2').style.width=E.hp+'%';document.getElementById('t1').innerText=Math.floor(P.hp);document.getElementById('t2').innerText=Math.floor(E.hp);}
+function atk(o,t){if(o.cd>0||o.at>0)return;o.at=t=='k'?14:t=='s'?28:10;o.a=t=='s'?3:t=='k'?2:1;o.cd=t=='s'?50:18;if(t=='s'){say(o==P?"PANDA FURY! 🐼🔥":"TIGER FURY! 🐯🔥","#f33",600);sp(o.x+o.w/2,o.y+20,'#f90',12)}}
+function hurt(d,a,dm){if(d.hit>0)return;d.hp=Math.max(0,d.hp-dm);d.hit=12;d.vx=(d.x<a.x?-1:1)*(dm>15?9:4);d.vy=-4;sp(d.x+d.w/2,d.y+35,dm>12?'#f00':'#ff0',dm>12?14:7);shake=dm>12?12:5;stop=dm>12?6:2;hp();if(d.hp<=0)say(d==P?"YOU LOSE 💀":"YOU WIN! 🏆",d==P?"#f00":"#0f0",2500)}
+function draw(o,pl){x.save();x.translate(o.x+o.w/2,o.y+o.h/2);x.scale(o.f,1);if(o.hit>0&&Math.floor(o.hit/2)%2==0)x.globalAlpha=.4;x.fillStyle='rgba(0,0,0,.3)';x.fillRect(-o.w/2+5,o.h/2-5,o.w,10);let col=pl?'#f0d080':'#ff9a3c';if(o.a==3)col='#ff3300';x.fillStyle=col;x.fillRect(-o.w/2,-o.h/2,o.w,o.h);x.fillStyle='#fff';x.beginPath();x.arc(0,-o.h/2-10,22,0,Math.PI*2);x.fill();x.fillStyle='#000';x.beginPath();x.arc(-7,-o.h/2-12,5,0,Math.PI*2);x.arc(7,-o.h/2-12,5,0,Math.PI*2);x.fill();if(o.at>0){x.fillStyle=o.a==3?'#ff0':'#f90';let ext=o.at>5?38:15;x.fillRect(o.w/2-5,-10,ext,12);}if(o.a==2){x.fillStyle='#c09050';x.fillRect(-10,o.h/2-15,42,12);}x.restore();}
+function upd(o,en,isAI){if(o.hp<=0)return;if(o.y>=280){o.vy=0;o.y=280;}else o.vy+=o.g;o.x+=o.vx;o.y+=o.vy;o.vx*=.85;if(o.x<0)o.x=0;if(o.x>740)o.x=740;if(o.at>0){o.at--;if(o.at==0)o.a=0;}if(o.cd>0)o.cd--;if(o.hit>0)o.hit--;if(o.at>0&&o.at<6){let ax=o.f==1?o.x+o.w:o.x-(o.a==2?50:35);let ay=o.y+(o.a==2?o.h-20:20);if(ax<en.x+en.w&&ax+40>en.x&&ay<en.y+en.h&&ay+25>en.y){let dm=o.a==3?22:o.a==2?12:8;hurt(en,o,dm);}}if(isAI&&E.hp>0){E.ai++;let d=E.x-P.x;if(Math.abs(d)>90){E.vx+=d>0?-.6:.6;E.f=d>0?-1:1;}else{if(E.ai%55==0&&Math.random()<.65)atk(E,Math.random()<.3?'s':Math.random()<.5?'k':'p');}if(Math.random()<.03&&E.y>=280)E.vy=-12;}}
+function loop(){requestAnimationFrame(loop);if(stop>0){stop--;return;}x.save();if(shake>0){x.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);shake*=.88;if(shake<.5)shake=0;}x.clearRect(0,0,800,400);x.fillStyle='#3a6b3a';x.fillRect(0,360,800,40);if(P.hp>0){if(k['a']){P.vx-=.9;P.f=-1}if(k['d']){P.vx+=.9;P.f=1}if(k['j']&&!down['j']){atk(P,'p');down['j']=1}if(k['k']&&!down['k']){atk(P,'k');down['k']=1}if(k['l']&&!down['l']){atk(P,'s');down['l']=1}if(k['r']&&!down['r']){rst();down['r']=1}for(let i in k)if(!k[i])down[i]=0;}upd(P,E,false);upd(E,P,true);draw(E,false);draw(P,true);for(let i=parts.length-1;i>=0;i--){let p=parts[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.3;p.life--;x.fillStyle=p.co;x.fillRect(p.x,p.y,5,5);if(p.life<=0)parts.splice(i,1);}x.restore();}rst();loop();
 </script>
 </body>
-</html>
+  </html>
