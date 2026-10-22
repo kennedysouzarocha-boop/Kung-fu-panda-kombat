@@ -1,33 +1,78 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>KUNG FU PANDA KOMBAT V7</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KUNG FU V8</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Poppins:wght@800&display=swap');
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0b1020;color:#fff;font-family:'Poppins',Arial;overflow:hidden}
-#menu{height:100vh;background:radial-gradient(#1a2a5a,#0b1020);display:flex;flex-direction:column;align-items:center;padding:12px}
-h1{font-family:'Bangers';font-size:32px;text-shadow:0 0 10px #ffcc00,3px 3px 0 #000;margin:10px}
-h1 span{color:#ffcc00}
-.sub{font-size:11px;opacity:.6;letter-spacing:3px;margin-bottom:10px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:360px}
-.card{background:linear-gradient(145deg,#1e2a4a,#121a30);border:2px solid #2a3a6a;border-radius:16px;padding:10px 6px;text-align:center}
-.card.on{border-color:#ffcc00;box-shadow:0 0 18px #ffcc00;background:linear-gradient(145deg,#3a2e0a,#2a2200)}
-.card .emo{font-size:38px;display:block}
-.card .name{font-size:11px;font-weight:800;margin-top:4px}
-#start{margin-top:14px;background:linear-gradient(#ffcc00,#ff8800);color:#000;border:none;padding:14px 50px;border-radius:30px;font-family:'Bangers';font-size:26px;box-shadow:0 4px 0 #aa5500,0 0 20px #ffcc00}
-#game{display:none;flex-direction:column;height:100vh;background:linear-gradient(#87ceeb 0%, #1e3a8a 60%, #0a0e1a 100%)}
-#hud{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(0,0,0,.7)}
-.life{width:38%;height:20px;background:#222;border:2px solid #fff;border-radius:10px;overflow:hidden}
-.life-fill{height:100%;width:100%}
-#p1hp{background:linear-gradient(90deg,#ff4400,#ffcc00)}#p2hp{background:linear-gradient(90deg,#00ccff,#0044ff);float:right}
-#timer{font-family:'Bangers';font-size:28px;color:#ffcc00}
-#arena{flex:1;position:relative}
-#floor{position:absolute;bottom:0;width:100%;height:90px;background:linear-gradient(#8b6a3a,#5a3e1a)}
-.fighter{position:absolute;bottom:90px;width:80px;height:100px;display:flex;flex-direction:column;align-items:center}
-.fighter .char{font-size:70px}
-#p1{left:12%}#p2{right:12%;transform:scaleX(-1)}#p2 .char{transform:scaleX(-1)}
-#fx{position:absolute;top:30%;width:100%;text-align:center;font-family:'Bangers';font-size:44px;color:#ffcc00;text-shadow:3px 3px 0 #000;opacity:0}
-#controls
+body{margin:0;background:#101830;color:#fff;font-family:Arial;text-align:center}
+h1{font-size:28px;margin:15px;color:#ffcc00}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:10px;max-width:360px;margin:0 auto}
+.c{background:#1a2340;border:3px solid #334477;border-radius:15px;padding:15px 5px;font-weight:bold}
+.c.on{border-color:#ffcc00;background:#332a00;box-shadow:0 0 15px #ffcc00}
+.c b{font-size:40px;display:block}
+#go{background:#ffcc00;color:#000;border:0;padding:15px 50px;border-radius:30px;font-size:24px;font-weight:bold;margin:15px}
+#game{display:none;height:100vh;flex-direction:column}
+#top{display:flex;justify-content:space-between;padding:10px;background:#000}
+.bar{width:35%;height:20px;background:#333;border-radius:10px;overflow:hidden}
+.fill{height:100%;width:100%;background:#0f0}
+#arena{flex:1;position:relative;background:#2a3a7a}
+#floor{position:absolute;bottom:0;width:100%;height:80px;background:#8a6a3a}
+#p1,#p2{position:absolute;bottom:80px;font-size:65px}
+#p1{left:10%}#p2{right:10%}
+#fx{position:absolute;top:20%;width:100%;text-align:center;font-size:32px;font-weight:bold;color:#ffcc00}
+#ctrl{display:grid;grid-template-columns:80px 80px 1fr 80px 80px;gap:8px;padding:10px;background:#000;height:90px}
+#ctrl button{background:#333;color:#fff;border:2px solid #666;border-radius:12px;font-size:16px;font-weight:bold}
+</style>
+</head>
+<body>
+<div id="m">
+<h1>🐼 KUNG FU PANDA KOMBAT V8</h1>
+<div class="grid">
+<div class="c on" id="c-po" onclick="s='po';sel(this)"><b>🐼</b>PO</div>
+<div class="c" id="c-tig" onclick="s='tig';sel(this)"><b>🐯</b>TIGRESA</div>
+<div class="c" id="c-shi" onclick="s='shi';sel(this)"><b>🦝</b>SHIFU</div>
+<div class="c" id="c-tai" onclick="s='tai';sel(this)"><b>🐆</b>TAI LUNG</div>
+<div class="c" id="c-shen" onclick="s='shen';sel(this)"><b>🦚</b>SHEN</div>
+<div class="c" id="c-kai" onclick="s='kai';sel(this)"><b>🐂</b>KAI</div>
+<div class="c" id="c-mac" onclick="s='mac';sel(this)"><b>🐒</b>MACACO</div>
+<div class="c" id="c-vib" onclick="s='vib';sel(this)"><b>🐍</b>VIBORA</div>
+<div class="c" id="c-man" onclick="s='man';sel(this)"><b>🦗</b>MANTIS</div>
+</div>
+<button id="go" onclick="go()">🥊 LUTAR! 🥊</button>
+<p>9 personagens - toque para escolher</p>
+</div>
+
+<div id="game">
+<div id="top"><div class="bar"><div id="hp1" class="fill"></div></div><div id="t">60</div><div class="bar"><div id="hp2" class="fill"></div></div></div>
+<div id="arena"><div id="floor"></div><div id="fx"></div><div id="p1">🐼</div><div id="p2">🐯</div></div>
+<div id="ctrl"><button onclick="mv(-1)">◀</button><button onclick="mv(1)">▶</button><div></div><button onclick="hit(1)">SOCO</button><button onclick="hit(2)">CHUTE</button></div>
+</div>
+
+<script>
+var s='po',h1=100,h2=100,x1=10,x2=10,on=false;
+function sel(e){var a=document.querySelectorAll('.c');for(var i=0;i<a.length;i++)a[i].classList.remove('on');e.classList.add('on');}
+function go(){
+document.getElementById('m').style.display='none';document.getElementById('game').style.display='flex';
+var m={po:'🐼',tig:'🐯',shi:'🦝',tai:'🐆',shen:'🦚',kai:'🐂',mac:'🐒',vib:'🐍',man:'🦗'};
+document.getElementById('p1').innerText=m[s];
+var ks=Object.keys(m);var r=ks[Math.floor(Math.random()*ks.length)];document.getElementById('p2').innerText=m[r];
+h1=100;h2=100;on=true;loop();
+}
+function mv(d){if(!on)return;x1+=d*5;if(x1<2)x1=2;if(x1>60)x1=60;document.getElementById('p1').style.left=x1+'%';}
+function hit(t){
+if(!on)return;var dist=Math.abs(x1-(80-x2));
+if(dist<25){h2-=t==1?12:20;document.getElementById('hp2').style.width=h2+'%';document.getElementById('fx').innerText=t==1?'SOCO!':'CHUTE!';
+if(h2<=0){document.getElementById('fx').innerText='VITORIA!';on=false;setTimeout(function(){location.reload()},1500);}}
+else{document.getElementById('fx').innerText='CHEGA PERTO!';}
+setTimeout(function(){document.getElementById('fx').innerText=''},500);
+}
+function loop(){
+if(!on)return;var dist=Math.abs(x1-(80-x2));
+if(dist<25&&Math.random()<0.08){h1-=10;document.getElementById('hp1').style.width=h1+'%';if(h1<=0){document.getElementById('fx').innerText='DERROTA!';on=false;setTimeout(function(){location.reload()},1500);}}
+else if(dist>25){if(x1<(80-x2))x2-=1;else x2+=1;document.getElementById('p2').style.right=x2+'%';}
+setTimeout(loop,150);
+}
+</script>
+</body>
+</html>
