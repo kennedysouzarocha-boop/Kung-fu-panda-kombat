@@ -1,19 +1,56 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kung Fu Panda Kombat ULTRA 3.0</title>
-<style>*{margin:0;padding:0;box-sizing:border-box}body{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);color:#fff;font-family:Arial;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:10px}h1{font-size:2em;text-shadow:0 0 20px #ff6b00;margin:10px}.menu{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:15px}.char{width:90px;height:110px;background:rgba(255,255,255,0.1);border:2px solid #ff6b00;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer}.char:hover{transform:scale(1.1);box-shadow:0 0 20px #ff6b00}.char span{font-size:2.5em}.btn{padding:12px 25px;background:#ff6b00;border:none;border-radius:8px;color:#fff;font-weight:bold;font-size:1.1em;cursor:pointer;margin:10px}#game{display:none;width:100%;max-width:800px}canvas{background:#000;border:3px solid #ff6b00;border-radius:10px;width:100%;height:400px;display:block;margin:0 auto}</style>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Kung Fu Panda Kombat V4 Mobile</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;touch-action:none}
+body{background:radial-gradient(#1a1a2e,#0f0f23);color:#fff;font-family:Arial;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.4em;margin:8px;text-shadow:0 0 15px #ff6b00;text-align:center}
+#menu{width:95%;max-width:600px}
+.chars{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.c{background:rgba(255,255,255,0.08);border:2px solid #ff6b00;border-radius:12px;padding:12px;text-align:center;cursor:pointer;font-size:0.9em}
+.c:active{transform:scale(0.9);background:rgba(255,107,0,0.3)}
+.c span{font-size:2.2em;display:block}
+.c.sel{border-color:#00ff88;box-shadow:0 0 15px #00ff88}
+#game{display:none;width:100%;max-width:900px;flex-direction:column;align-items:center}
+#hud{width:95%;display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(0,0,0,0.7);border-radius:8px;margin:5px 0}
+.hp{width:38%;height:18px;background:#333;border-radius:10px;overflow:hidden;border:1px solid #fff}
+.hp-fill{height:100%;transition:width 0.2s}
+#canvasWrap{position:relative;width:95vw;max-width:800px}
+canvas{width:100%;height:55vh;max-height:420px;background:linear-gradient(to bottom,#0a1a3a 0%,#1a3a1a 70%,#0a2a0a 100%);border:3px solid #ff6b00;border-radius:10px;display:block}
+#controls{width:95vw;max-width:800px;display:flex;justify-content:space-between;margin-top:8px;gap:5px}
+.left,.right{display:flex;gap:6px}
+.btn{width:58px;height:58px;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.8em;user-select:none}
+.btn:active{transform:scale(0.9)}
+.move{background:rgba(255,255,255,0.15)} .jump{background:rgba(100,180,255,0.4)}
+.punch{background:rgba(255,100,100,0.5)} .kick{background:rgba(255,255,0,0.4);color:#000}
+.special{background:linear-gradient(orange,red);border-color:gold} .block{background:rgba(100,255,100,0.3)}
+.big{padding:10px 20px;background:#ff6b00;border:none;border-radius:8px;color:#fff;font-weight:bold;margin:10px;cursor:pointer}
+#msg{position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);font-size:2.2em;font-weight:bold;text-shadow:0 0 20px #000;display:none;z-index:10;text-align:center}
+</style>
 </head>
 <body>
-<h1>🐼 KUNG FU PANDA KOMBAT ULTRA 🥋</h1>
-<div id="menuScreen">
-<div class="menu">
-<div class="char"><span>🐼</span>Po</div><div class="char"><span>🐯</span>Tigresa</div><div class="char"><span>🦝</span>Shifu</div><div class="char"><span>🐆</span>Tai Lung</div><div class="char"><span>🦚</span>Shen</div><div class="char"><span>🐂</span>Kai</div><div class="char"><span>🐒</span>Macaco</div><div class="char"><span>🐍</span>Víbora</div><div class="char"><span>🦗</span>Mantis</div>
+<h1>🐼 KUNG FU PANDA KOMBAT V4 📱</h1>
+<div id="menu">
+<div class="chars">
+<div class="c sel" data-c="🐼" data-n="Po"><span>🐼</span>Po</div>
+<div class="c" data-c="🐯" data-n="Tigresa"><span>🐯</span>Tigresa</div>
+<div class="c" data-c="🦝" data-n="Shifu"><span>🦝</span>Shifu</div>
+<div class="c" data-c="🐆" data-n="Tai Lung"><span>🐆</span>Tai Lung</div>
+<div class="c" data-c="🦚" data-n="Shen"><span>🦚</span>Shen</div>
+<div class="c" data-c="🐂" data-n="Kai"><span>🐂</span>Kai</div>
+<div class="c" data-c="🐒" data-n="Macaco"><span>🐒</span>Macaco</div>
+<div class="c" data-c="🐍" data-n="Vibora"><span>🐍</span>Vibora</div>
+<div class="c" data-c="🦗" data-n="Mantis"><span>🦗</span>Mantis</div>
 </div>
-<button class="btn" onclick="document.getElementById('menuScreen').style.display='none';document.getElementById('game').style.display='block';loop()">📖 MODO HISTÓRIA</button>
-<button class="btn" onclick="document.getElementById('menuScreen').style.display='none';document.getElementById('game').style.display='block';loop()">🕹️ ARCADE</button>
-<p style="margin-top:15px;opacity:0.8">9 Lutadores - Teclas A/D mover W pular J soco K chute L especial</p>
+<button class="big" onclick="startGame()">🥋 LUTAR!</button>
+<p style="text-align:center;opacity:0.7;font-size:0.85em">Escolhe seu lutador e aperte LUTAR<br>Mobile com botões na tela</p>
 </div>
-<div id="game"><canvas id="c" width="800" height="400"></canvas><button class="btn" onclick="location.reload()">Voltar</button></div>
-<script>let ctx=document.getElementById('c').getContext('2d'),p1={x:100,y:300,hp:100},p2={x:650,y:300,hp:100},keys={},anim=0;window.onkeydown=e=>keys[e.key.toLowerCase()]=true;window.onkeyup=e=>keys[e.key.toLowerCase()]=false;function loop(){anim+=0.05;ctx.clearRect(0,0,800,400);ctx.fillStyle='#1a3a1a';ctx.fillRect(0,350,800,50);ctx.fillStyle='#ff6b00';ctx.font='20px Arial';ctx.fillText('HP:'+Math.floor(p1.hp)+' VS Inimigo HP:'+Math.floor(p2.hp),20,30);ctx.font='60px Arial';ctx.fillText('🐼',p1.x+Math.sin(anim)*5,p1.y);ctx.fillText('🐆',p2.x+Math.cos(anim)*5,p2.y);if(keys['a'])p1.x-=5;if(keys['d'])p1.x+=5;if(keys['w'])p1.y-=10;if(p1.y<300)p1.y+=3;if(p1.y>300)p1.y=300;if(keys['j']){p2.hp-=0.5;ctx.fillStyle='rgba(255,0,0,0.5)';ctx.fillRect(p2.x,p2.y,60,60)}if(keys['k']){p2.hp-=0.7;ctx.fillStyle='rgba(255,255,0,0.5)';ctx.fillRect(p2.x-10,p2.y+20,80,30)}if(keys['l']){p2.hp-=1.5;ctx.fillStyle='#ff6b00';ctx.beginPath();ctx.arc(p2.x+30,p2.y+30,40,0,6.28);ctx.fill()}if(p2.hp<=0){ctx.fillStyle='#00ff00';ctx.font='40px Arial';ctx.fillText('VENCEU! 🎉',250,200);return}requestAnimationFrame(loop)}</script>
-</body></html>
+
+<div id="game">
+<div id="hud">
+<div style="width:38%"><div id="n1" style="font-size:0.8em">Po</div><div class="hp"><div id="hp1" class="hp-fill" style="width:100%;background:linear-gradient(90deg,#00ff88,#00cc66)"></div></div></div>
+<div style="font-weight:bold" id="timer">60</div>
+<div style="width:38%;text-align:right"><div id="n2" style="font-size:0.8em">Tai Lung</div><div class="hp"><div
